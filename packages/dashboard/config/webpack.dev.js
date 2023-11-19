@@ -6,20 +6,21 @@ const packageJson = require('../package.json')
 const devConfig = {
     mode: 'development',
     output: {
-        publicPath: 'http://localhost:8080/'
+        publicPath: 'http://localhost:8083/'
     },
     devServer: {
-        port: 8080,
-        historyApiFallback: true
+        port: 8083,
+        historyApiFallback: true,
+        headers: {
+            'Access-Control-Allow-Origin': '*'
+        }
     },
     plugins: [
         new ModuleFederationPlugin({
-            name: 'container',
+            name: 'dashboard',
             filename: 'remoteEntry.js',
-            remotes: {
-                marketingApp: 'marketing@http://localhost:8081/remoteEntry.js',
-                authApp: 'auth@http://localhost:8082/remoteEntry.js',
-                dashboardApp: 'dashboard@http://localhost:8083/remoteEntry.js'
+            exposes: {
+                './DashboardIndex': './src/bootstrap'
             },
             shared: packageJson.dependencies
         }),
